@@ -1,10 +1,7 @@
+
 ####################################################
 ##   Only modify if you know what you're doing.   ##
 ####################################################
-
-
-# Helps Eclipse/CDT find our include directories
-set(CMAKE_VERBOSE_MAKEFILE on)
 
 # Detect the bitness of our machine (eg 32- or 64-bit)
 # C-equiv: sizeof(void*)
@@ -15,6 +12,23 @@ math(EXPR CMAKE_ARCH_BITNESS 8*${CMAKE_SIZEOF_VOID_P})
 # The Visual Studio generator creates a single project with all these
 set(CMAKE_BUILD_TYPE "Release" CACHE STRING "For single-configuration generators (e.g. make) set the type of build: Release, Debug, RelWithDebugInfo, MinSizeRel")
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Release" "Debug" "RelWithDebugInfo" "MinSizeRel")
+
+####################################################
+## ---------------------------------------------- ##
+## -                                            - ##
+## -            Enable Intel AVX Support        - ##
+## -                                            - ##
+## ---------------------------------------------- ##
+####################################################
+macro(enable_intel_avx)
+    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+        set(CMAKE_C_COMPILE_FLAGS "${CMAKE_C_COMPILE_FLAGS} -mavx")
+        set(CMAKE_CXX_COMPILE_FLAGS "${CMAKE_CXX_COMPILE_FLAGS} -mavx")
+    elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+        set(CMAKE_C_COMPILE_FLAGS "${CMAKE_C_COMPILE_FLAGS} /arch:AVX")
+        set(CMAKE_CXX_COMPILE_FLAGS "${CMAKE_CXX_COMPILE_FLAGS} /arch:AVX")
+    endif()
+endmacro(enable_intel_avx)
 
 
 ####################################################
